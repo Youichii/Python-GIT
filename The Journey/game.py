@@ -1,18 +1,31 @@
 import pygame
 from player import Player
-from monster1 import Monster
+from monster import Monster
+
 
 
 #classe du jeu
-class Game:
+class Game():
     def __init__(self):
-        self.player = Player()
 
-        #groupe de monstre
+        self.all_players = pygame.sprite.Group()
+        self.player = Player(self)
+        self.all_players.add(self.player)
+        self.monster = Monster(self)
         self.all_monsters = pygame.sprite.Group()
+        self.all_players.add(self.player)
         self.pressed = {}
-        self.spawn_monster()
+        self.spawn_monster() #appel de la methode
+
+
+    def check_collision(self, sprite, group):
+        return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
     def spawn_monster(self):
-        monster = Monster()
-        self.all_monsters.add(monster)
+        monster = Monster(self)
+        self.all_monsters.add(monster) #ajoute un monstre au groupe de monstres
+
+
+
+
+
