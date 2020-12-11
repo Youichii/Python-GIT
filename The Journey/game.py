@@ -8,6 +8,8 @@ from monster import Monster
 class Game():
     def __init__(self):
 
+        #definir si notre jeu a commencé
+        self.is_playing = False
         self.all_players = pygame.sprite.Group()
         self.player = Player(self)
         self.all_players.add(self.player)
@@ -15,7 +17,48 @@ class Game():
         self.all_monsters = pygame.sprite.Group()
         self.all_players.add(self.player)
         self.pressed = {}
-        self.spawn_monster() #appel de la methode
+
+    #pour relancer le jeu avec les monstres quand on meurt
+    def start(self):
+        self.is_playing = True
+        self.spawn_monster()  # appel de la methode
+        # self.spawn_monster()
+
+    def game_over(self):
+        #remettre le jeu à 0
+        self.all_monsters = pygame.sprite.Group()
+        self.player.health = self.player.max_health
+        self.is_playing = False
+
+
+    def update(self, screen):
+        # appliquer image du joueur
+        screen.blit(self.player.image, self.player.rect)
+
+        # actualiser la barre de vie du joueur
+        self.player.update_health_bar(screen)
+
+        # recuperer les projectiles du joueeurs
+        for projectile in self.player.all_projectile:
+            projectile.move()
+
+        # recuperer les monstres du jeu
+        for monster in self.all_monsters:
+            monster.forward()
+            monster.update_health_bar(screen)
+
+        # appliquer les images projectiles
+        self.player.all_projectile.draw(screen)
+
+        # appliquer ensemble des images des monstres
+        self.all_monsters.draw(screen)
+
+        # verifier si joueuer va a gauche u droite
+
+        if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():
+            self.player.move_right()
+        elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0:
+            self.player.move_left()
 
 
     def check_collision(self, sprite, group):
