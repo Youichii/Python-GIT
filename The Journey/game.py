@@ -1,6 +1,8 @@
 import pygame
 from player import Player
 from monster import Monster
+from score import Score
+
 
 
 
@@ -12,6 +14,7 @@ class Game():
         self.is_playing = False
         self.all_players = pygame.sprite.Group()
         self.player = Player(self)
+        self.score = Score(game=Game)
         self.all_players.add(self.player)
         self.monster = Monster(self)
         self.all_monsters = pygame.sprite.Group()
@@ -22,7 +25,8 @@ class Game():
     def start(self):
         self.is_playing = True
         self.spawn_monster()  # appel de la methode
-        # self.spawn_monster()
+        #self.spawn_monster()
+        self.score.points = 0
 
     def game_over(self):
         #remettre le jeu à 0
@@ -34,6 +38,13 @@ class Game():
     def update(self, screen):
         # appliquer image du joueur
         screen.blit(self.player.image, self.player.rect)
+
+        #afficher le score
+        font = pygame.font.Font(None, 30)
+        scores =font.render("Monster kill: " + str(self.score.points), True, (255, 255, 255))
+        screen.blit(scores, (0, 0))
+
+
 
         # actualiser la barre de vie du joueur
         self.player.update_health_bar(screen)
@@ -52,6 +63,8 @@ class Game():
 
         # appliquer ensemble des images des monstres
         self.all_monsters.draw(screen)
+
+
 
         # verifier si joueuer va a gauche u droite
 
