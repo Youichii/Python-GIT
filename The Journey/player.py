@@ -1,5 +1,6 @@
 import pygame
 from projectile import Projectile
+from score import Score
 
 #creer un class = joueur
 
@@ -17,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 400
         self.rect.y = 450
+        #self.score = 0
 
     def damage(self, amount):
         if self.health - amount > amount:
@@ -24,6 +26,7 @@ class Player(pygame.sprite.Sprite):
         else:
             #si le joueuer n'a plus de points de vie
             self.game.game_over()
+            self.game.score.points = 0
 
 
     def update_health_bar(self, surface):
